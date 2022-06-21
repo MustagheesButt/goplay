@@ -2,9 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -90,6 +92,14 @@ func deleteBooks(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(books)
 }
 
+func home(w http.ResponseWriter, r *http.Request) {
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "0x000"
+	}
+	w.Write([]byte(fmt.Sprintf("Hello World from %s", hostname)))
+}
+
 func main() {
 	r := mux.NewRouter()
 
@@ -98,6 +108,7 @@ func main() {
 	books = append(books, Book{ID: "2", Isbn: "2234", Title: "False Promise",
 		Author: &Author{FirstName: "John", LastName: "Rich"}})
 
+	r.HandleFunc("/", home).Methods("GET")
 	r.HandleFunc("/api/books", getBooks).Methods("GET")
 	r.HandleFunc("/api/books/{id}", getBook).Methods("GET")
 	r.HandleFunc("/api/books", createBooks).Methods("POST")

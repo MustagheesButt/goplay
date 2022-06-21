@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goplay
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: goplay
+  template:
+    metadata:
+      labels:
+        app: goplay
+    spec:
+      containers:
+      - name: goplay
+        image: mustaghees/goplay:2.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 8080
